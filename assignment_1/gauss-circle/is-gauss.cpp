@@ -1,10 +1,16 @@
-int num_points(int r) {
+#include "is-gauss.h"
+
+int num_points(int r)
+{
 
     int count = 0;
     // Loop through area
-    for (int x = 0; x <= r; x++) {
-        for (int y = 0; y <= r; y++) {
-            if (x * x + y *y <= r * r) {
+    for (int x = 0; x <= r; x++)
+    {
+        for (int y = 0; y <= r; y++)
+        {
+            if (x * x + y * y <= r * r)
+            {
                 ++count;
             }
         }

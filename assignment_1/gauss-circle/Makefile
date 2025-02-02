@@ -1,18 +1,20 @@
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -I. -Wall
+
 # Variables
 binary = gauss_circle
-sources = main.cpp num_points.cpp
+sources = main.cpp is-gauss.cpp
 objects = $(sources:.cpp=.o)
-CXX = g++
-CXXFLAGS = -I.
 
 # Default target
 all: $(binary)
 
 # Build the binary
-$(binary): main.o
+$(binary): $(objects)
 	$(CXX) -o $@ $^
 
-# Compile source files into object files
+# Compile .cpp files to .o files
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
