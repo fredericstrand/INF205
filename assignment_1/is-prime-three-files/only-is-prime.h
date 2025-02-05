@@ -1,6 +1,3 @@
-#ifndef ONLY_IS_PRIME_H
-#define ONLY_IS_PRIME_H
+#pragma once
 
 bool is_prime(int n);
-
-#endif
