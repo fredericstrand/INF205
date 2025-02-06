@@ -19,7 +19,7 @@ int num_points(int r)
     count = 4 * count;
 
     // Adjust for points on the axes
-    count -= 4 * r + 1;
+    count -= (4 * r) + 3;
 
     return count;
 }
