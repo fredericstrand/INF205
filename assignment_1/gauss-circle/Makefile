@@ -1,23 +1,11 @@
-# Compiler and flags
-CXX = g++
-CXXFLAGS = -I. -Wall
-
-# Variables
 binary = gauss_circle
-sources = main.cpp is-gauss.cpp
-objects = $(sources:.cpp=.o)
+folder = gauss-circle
 
-# Default target
-all: $(binary)
+$(binary): is-gauss.o main.o
+	g++ -O3 -o $@ $^
 
-# Build the binary
-$(binary): $(objects)
-	$(CXX) -o $@ $^
-
-# Compile .cpp files to .o files
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Clean build artifacts
 clean:
-	rm -f $(binary) *.o
+	rm -f $(binary) *.o *.zip
+
+zip: clean
+	zip $(folder) Makefile *.cpp

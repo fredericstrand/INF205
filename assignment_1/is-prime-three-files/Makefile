@@ -1,9 +1,6 @@
 binary = is-prime-900
 folder = is-prime-three-files
 
-run: $(binary)
-	./$(binary)
-
 $(binary): only-is-prime.o only-main.o
 	g++ -o $@ $^
 

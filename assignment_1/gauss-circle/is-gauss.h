@@ -1,3 +1,3 @@
 #pragma once
 
-int num_points(int r);
+int num_points(double r);

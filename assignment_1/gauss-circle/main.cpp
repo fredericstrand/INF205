@@ -5,9 +5,9 @@
 int main(int argc, char **argv)
 {
     // Parse the radius from the command-line argument
-    int r = std::atoi(argv[1]);
+    double r = std::atoi(argv[1]);
 
-    int count = num_points(r);
+    long long count = num_points(r);
 
     std::cout << "Number of points for radius " << r << " -> " << count << std::endl;
 }

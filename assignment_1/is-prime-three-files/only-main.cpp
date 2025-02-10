@@ -3,12 +3,6 @@
 #include "only-is-prime.h"
 
 int main(int argc, char **argv)
-/*
-   Arguments:
-   -  argc: is the count of command-line arguments
-   -  argv: is an array of strings representing the arguments
-   -  argv[0] is the program name, while argv[1] is the actual argument
-*/
 {
 
    int x = std::atoi(argv[1]);
