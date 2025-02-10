@@ -1,5 +1,4 @@
 #include "is-gauss.h"
-#include <iostream>
 
 int num_points(double r)
 {
