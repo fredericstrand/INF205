@@ -1,7 +1,7 @@
 binary = LJTS
 folder = assignment_2
 
-$(binary): is-gauss.o main.o
+$(binary): molecule.0 readxyz.o main.o
 	g++ -O3 -o $@ $^
 
 clean:

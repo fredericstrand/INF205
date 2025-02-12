@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -14,6 +15,8 @@ vector<vector<float>> readXYZ(const string &filename)
     file >> n;
     string num_atoms;
     std::getline(file, num_atoms);
+    string dummy
+    std::getline(file, dummy)
 
     for (int = 0; i < n; i++)
     {
