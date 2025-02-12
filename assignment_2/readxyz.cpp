@@ -1,27 +1,26 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <tuple>
-#include <string>
 
 using namespace std;
 
-bool Molecule::readXYZ(const string &filename)
+vector<vector<float>> readXYZ(const string &filename)
 {
-    // Read the two first lines
-    file >> num_atoms;
-    file.ignore();
-    getline(file, comment);
+    vector<vector<float>> data;
+    ifstream file(filename);
+    if (!file.is_open())
+        return data;
+    int n;
+    file >> n;
+    string num_atoms;
+    std::getline(file, num_atoms);
 
-    // Read the atom data
-    string element;
-    float x, y, z;
-    atoms.clear();
-    for (int i = 0; i < num_atoms; i++)
+    for (int = 0; i < n; i++)
     {
-        file >> element >> x >> y >> z;
-        atoms.emplace_back(element, x, y, z);
+        string label;
+        float x, y, z;
+        file label >> x >> y >> z;
+        data.push_back({x, y, z})
     }
-    file.close();
-    return true;
+    return data;
 }
