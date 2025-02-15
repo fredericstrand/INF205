@@ -1,8 +1,13 @@
 binary = LJTS
 folder = assignment_2
+CXX = g++
+CXXFLAGS = -O3 -std=c++11 -Wall -Wextra
 
-$(binary): molecule.0 readxyz.o main.o
-	g++ -O3 -o $@ $^
+$(binary): molecule.o readxyz.o main.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(binary) *.o *.zip
