@@ -4,17 +4,17 @@
 class Molecule
 {
 public:
-    Molecule(int id, float x, float y, float z, float vx, float vy, float vz);
+    Molecule(int id, double x, double y, double z, double vx, double vy, double vz);
 
     int getID() const;
-    const std::vector<float> &getCoordinates() const;
-    const std::vector<float> &getVelocities() const;
+    const std::vector<double> &getCoordinates() const;
+    const std::vector<double> &getVelocities() const;
 
-    float kinetic_energy(float mass = 1) const;
-    float potential_energy(const Molecule &other, float epsilon = 1, float sigma = 1) const;
+    double kinetic_energy(double mass = 1) const;
+    double potential_energy(const Molecule &other, double epsilon = 1, double sigma = 1) const;
 
 private:
     int m_id;
-    std::vector<float> m_coords;
-    std::vector<float> m_vels;
+    std::vector<double> m_coords;
+    std::vector<double> m_vels;
 };

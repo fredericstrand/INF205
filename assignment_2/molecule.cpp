@@ -1,7 +1,7 @@
 #include "molecule.h"
-#include <cmath> // for std::sqrt, std::pow
+#include <cmath>
 
-Molecule::Molecule(int id, float x, float y, float z, float vx, float vy, float vz)
+Molecule::Molecule(int id, double x, double y, double z, double vx, double vy, double vz)
     : m_id(id), m_coords(3), m_vels(3)
 {
     m_coords[0] = x;
@@ -14,29 +14,29 @@ Molecule::Molecule(int id, float x, float y, float z, float vx, float vy, float 
 }
 
 // Kinetic energy
-float Molecule::kinetic_energy(float mass) const
+double Molecule::kinetic_energy(double mass) const
 {
-    float vx = m_vels[0];
-    float vy = m_vels[1];
-    float vz = m_vels[2];
-    return 0.5f * mass * (vx * vx + vy * vy + vz * vz);
+    double vx = m_vels[0];
+    double vy = m_vels[1];
+    double vz = m_vels[2];
+    return 0.5 * mass * (vx * vx + vy * vy + vz * vz);
 }
 
 // Potential energy (e.g., Lennard-Jones)
-float Molecule::potential_energy(const Molecule &other, float epsilon, float sigma) const
+double Molecule::potential_energy(const Molecule &other, double epsilon, double sigma) const
 {
-    float dx = m_coords[0] - other.m_coords[0];
-    float dy = m_coords[1] - other.m_coords[1];
-    float dz = m_coords[2] - other.m_coords[2];
-    float r2 = dx * dx + dy * dy + dz * dz;
-    float r = std::sqrt(r2);
-    if (r == 0.0f)
-        return 0.0f;
+    double dx = m_coords[0] - other.m_coords[0];
+    double dy = m_coords[1] - other.m_coords[1];
+    double dz = m_coords[2] - other.m_coords[2];
+    double r2 = dx * dx + dy * dy + dz * dz;
+    double r = std::sqrt(r2);
+    if (r == 0.0)
+        return 0.0;
 
-    float sr = sigma / r;
-    float sr6 = std::pow(sr, 6);
-    float sr12 = std::pow(sr, 12);
-    return 4.0f * epsilon * (sr12 - sr6);
+    double sr = sigma / r;
+    double sr6 = std::pow(sr, 6);
+    double sr12 = std::pow(sr, 12);
+    return 4.0 * epsilon * (sr12 - sr6);
 }
 
 int Molecule::getID() const
@@ -44,12 +44,12 @@ int Molecule::getID() const
     return m_id;
 }
 
-const std::vector<float> &Molecule::getCoordinates() const
+const std::vector<double> &Molecule::getCoordinates() const
 {
     return m_coords;
 }
 
-const std::vector<float> &Molecule::getVelocities() const
+const std::vector<double> &Molecule::getVelocities() const
 {
     return m_vels;
 }

@@ -1,4 +1,4 @@
-binary = LJTS
+binary = readxyz
 folder = assignment_2
 CXX = g++
 CXXFLAGS = -O3 -std=c++11 -Wall -Wextra

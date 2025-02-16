@@ -4,7 +4,7 @@
 #include "molecule.h"
 
 // Function declared in readerXYZ.cpp
-std::vector<std::vector<float>> readXYZ(const std::string &filename);
+std::vector<std::vector<double>> readXYZ(const std::string &filename);
 
 int main(int argc, char *argv[])
 {
@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     }
 
     // Reading the positions and velocities
-    std::vector<std::vector<float>> posData = readXYZ(argv[1]);
-    std::vector<std::vector<float>> velData = readXYZ(argv[2]);
+    std::vector<std::vector<double>> posData = readXYZ(argv[1]);
+    std::vector<std::vector<double>> velData = readXYZ(argv[2]);
 
     // Initialize the molecules
     std::vector<Molecule> molecules;
@@ -25,10 +25,10 @@ int main(int argc, char *argv[])
     // Create the molecules
     for (size_t i = 0; i < posData.size(); ++i)
     {
-        float x = posData[i][0];
-        float y = posData[i][1];
-        float z = posData[i][2];
-        float vx = 0.f, vy = 0.f, vz = 0.f;
+        double x = posData[i][0];
+        double y = posData[i][1];
+        double z = posData[i][2];
+        double vx = 0.f, vy = 0.f, vz = 0.f;
 
         if (i < velData.size())
         {
@@ -42,25 +42,23 @@ int main(int argc, char *argv[])
     }
 
     // Compute the total kinetic and potential energy
-    float kineticEnergy = 0.0f;
-    float potentialEnergy = 0.0f;
+    double kineticEnergy = 0.0;
+    double potentialEnergy = 0.0;
 
+    size_t i = 0;
     for (const auto &molecule : molecules)
     {
-        // Kinetic
         kineticEnergy += molecule.kinetic_energy();
 
-        // Potential (pairwise sums)
-        for (size_t i = 0; i < molecules.size(); ++i)
+        for (size_t j = i + 1; j < molecules.size(); ++j)
         {
-            for (size_t j = i + 1; j < molecules.size(); ++j)
-            {
-                potentialEnergy += molecules[i].potential_energy(molecules[j]);
-            }
+            potentialEnergy += molecule.potential_energy(molecules[j]);
         }
+
+        ++i;
     }
 
-    float totalEnergy = kineticEnergy + potentialEnergy;
+    double totalEnergy = kineticEnergy + potentialEnergy;
 
     std::cout << "Kinetic energy:   " << kineticEnergy << std::endl;
     std::cout << "Potential energy: " << potentialEnergy << std::endl;
