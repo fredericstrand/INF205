@@ -22,7 +22,7 @@ double Molecule::kinetic_energy(double mass) const
     return 0.5 * mass * (vx * vx + vy * vy + vz * vz);
 }
 
-// Potential energy (e.g., Lennard-Jones)
+// Potential energy (Lennard-Jones)
 double Molecule::potential_energy(const Molecule &other, double epsilon, double sigma) const
 {
     double dx = m_coords[0] - other.m_coords[0];
@@ -30,7 +30,9 @@ double Molecule::potential_energy(const Molecule &other, double epsilon, double 
     double dz = m_coords[2] - other.m_coords[2];
     double r2 = dx * dx + dy * dy + dz * dz;
     double r = std::sqrt(r2);
-    if (r == 0.0)
+
+    // Checks if r is greater than 2.5 or is 0
+    if (r >= 2.5 || r == 0.0)
         return 0.0;
 
     double sr = sigma / r;

@@ -2,8 +2,9 @@
 #include <vector>
 #include <string>
 #include "molecule.h"
+#include "molecularsystem.h"
 
-// Function declared in readerXYZ.cpp
+// Initialize READXYZ function
 std::vector<std::vector<double>> readXYZ(const std::string &filename);
 
 int main(int argc, char *argv[])
@@ -14,22 +15,22 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Reading the positions and velocities
+    // Read data from files
     std::vector<std::vector<double>> posData = readXYZ(argv[1]);
     std::vector<std::vector<double>> velData = readXYZ(argv[2]);
 
-    // Initialize the molecules
-    std::vector<Molecule> molecules;
-    molecules.reserve(posData.size());
+    // Initialize MolecularSystem object
+    MolecularSystem system;
 
-    // Create the molecules
+    // Loop over all positions and velocities, and create Molecule objects
     for (size_t i = 0; i < posData.size(); ++i)
     {
         double x = posData[i][0];
         double y = posData[i][1];
         double z = posData[i][2];
-        double vx = 0.f, vy = 0.f, vz = 0.f;
+        double vx = 0.0, vy = 0.0, vz = 0.0;
 
+        // Add velocities if available
         if (i < velData.size())
         {
             vx = velData[i][0];
@@ -37,27 +38,15 @@ int main(int argc, char *argv[])
             vz = velData[i][2];
         }
 
+        // Create Molecule object
         Molecule mol(static_cast<int>(i), x, y, z, vx, vy, vz);
-        molecules.push_back(mol);
+
+        // Add molecule object to MolecularSystem object
+        system.addMolecule(mol);
     }
 
-    // Compute the total kinetic and potential energy
-    double kineticEnergy = 0.0;
-    double potentialEnergy = 0.0;
-
-    size_t i = 0;
-    for (const auto &molecule : molecules)
-    {
-        kineticEnergy += molecule.kinetic_energy();
-
-        for (size_t j = i + 1; j < molecules.size(); ++j)
-        {
-            potentialEnergy += molecule.potential_energy(molecules[j]);
-        }
-
-        ++i;
-    }
-
+    double kineticEnergy = system.totalKinetic();
+    double potentialEnergy = system.totalPotential();
     double totalEnergy = kineticEnergy + potentialEnergy;
 
     std::cout << "Kinetic energy:   " << kineticEnergy << std::endl;
