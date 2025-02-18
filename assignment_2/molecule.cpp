@@ -38,7 +38,15 @@ double Molecule::potential_energy(const Molecule &other, double epsilon, double 
     double sr = sigma / r;
     double sr6 = std::pow(sr, 6);
     double sr12 = std::pow(sr, 12);
-    return 4.0 * epsilon * (sr12 - sr6);
+    double u = 4.0 * epsilon * (sr12 - sr6);
+
+    // Caluclate the potential energy at the cut-off distance
+    double sr_cut = sigma / 2.5;
+    double sr6_cut = std::pow(sr_cut, 6);
+    double sr12_cut = std::pow(sr_cut, 12);
+    double u_cut = 4.0 * epsilon * (sr12_cut - sr6_cut);
+
+    return u - u_cut;
 }
 
 int Molecule::getID() const
