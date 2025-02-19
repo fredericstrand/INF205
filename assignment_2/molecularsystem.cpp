@@ -22,7 +22,10 @@ double MolecularSystem::totalPotential() const
     {
         for (size_t j = i + 1; j < m_mols.size(); ++j)
         {
-            sum += m_mols[i].potential_energy(m_mols[j], 1.0, 1.0);
+            if (m_mols[i].getID() != m_mols[j].getID())
+            {
+                sum += m_mols[i].potential_energy(m_mols[j], 1.0, 1.0);
+            }
         }
     }
     return sum;

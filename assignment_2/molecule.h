@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <array>
 
 class Molecule
 {
@@ -8,8 +8,8 @@ public:
 
     // Gettere
     int getID() const;
-    const std::vector<double> &getCoordinates() const;
-    const std::vector<double> &getVelocities() const;
+    const std::array<double, 3> &getCoordinates() const;
+    const std::array<double, 3> &getVelocities() const;
 
     double kinetic_energy(double mass = 1) const;
     double potential_energy(const Molecule &other,
@@ -18,6 +18,6 @@ public:
 
 private:
     int m_id;
-    std::vector<double> m_coords;
-    std::vector<double> m_vels;
+    std::array<double, 3> m_coords;
+    std::array<double, 3> m_vels;
 };

@@ -5,19 +5,29 @@
 #include "molecularsystem.h"
 
 // Initialize READXYZ function
-std::vector<std::vector<double>> readXYZ(const std::string &filename);
+std::vector<std::array<double, 3>> readXYZ(const std::string &filename);
 
 int main(int argc, char *argv[])
 {
-    if (argc < 3)
+    if (argc < 2)
     {
-        std::cerr << "Usage: " << argv[0] << " positions.xyz velocities.xyz\n";
+        std::cerr << "You must at least have a positions file " << argv[0] << "\n";
         return 1;
     }
 
-    // Read data from files
-    std::vector<std::vector<double>> posData = readXYZ(argv[1]);
-    std::vector<std::vector<double>> velData = readXYZ(argv[2]);
+    std::vector<std::array<double, 3>> posData;
+    std::vector<std::array<double, 3>> velData;
+
+    if (argc == 2)
+    {
+        posData = readXYZ(argv[1]);
+        velData.resize(posData.size(), {0.0, 0.0, 0.0});
+    }
+    else
+    {
+        posData = readXYZ(argv[1]);
+        velData = readXYZ(argv[2]);
+    }
 
     // Initialize MolecularSystem object
     MolecularSystem system;

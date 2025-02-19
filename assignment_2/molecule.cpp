@@ -1,8 +1,9 @@
 #include "molecule.h"
 #include <cmath>
+#include <iostream>
 
 Molecule::Molecule(int id, double x, double y, double z, double vx, double vy, double vz)
-    : m_id(id), m_coords(3), m_vels(3)
+    : m_id(id), m_coords({x, y, z}), m_vels({vx, vy, vz})
 {
     m_coords[0] = x;
     m_coords[1] = y;
@@ -54,12 +55,12 @@ int Molecule::getID() const
     return m_id;
 }
 
-const std::vector<double> &Molecule::getCoordinates() const
+const std::array<double, 3> &Molecule::getCoordinates() const
 {
     return m_coords;
 }
 
-const std::vector<double> &Molecule::getVelocities() const
+const std::array<double, 3> &Molecule::getVelocities() const
 {
     return m_vels;
 }
