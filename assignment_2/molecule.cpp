@@ -26,27 +26,30 @@ double Molecule::kinetic_energy(double mass) const
 // Potential energy (Lennard-Jones)
 double Molecule::potential_energy(const Molecule &other, double epsilon, double sigma) const
 {
+    static const double cutoffDistance = 2.5;
+    static const double u_cut = 4.0 * ((1.0 / std::pow(cutoffDistance, 12)) - (1.0 / std::pow(cutoffDistance, 6)));
+    static const double cutoffDistance2 = cutoffDistance * cutoffDistance;
+
+    // Compute inter-molecular distance
     double dx = m_coords[0] - other.m_coords[0];
     double dy = m_coords[1] - other.m_coords[1];
     double dz = m_coords[2] - other.m_coords[2];
     double r2 = dx * dx + dy * dy + dz * dz;
-    double r = std::sqrt(r2);
 
-    // Checks if r is greater than 2.5 or is 0
-    if (r >= 2.5 || r == 0.0)
+    // If r is greater than cutoff or zero, return zero
+    if (r2 >= cutoffDistance2 || r2 == 0.0)
         return 0.0;
 
+    double r = std::sqrt(r2);
+
+    // Instead of std::pow, use multiplications for performance:
     double sr = sigma / r;
-    double sr6 = std::pow(sr, 6);
-    double sr12 = std::pow(sr, 12);
+    double sr2 = sr * sr;
+    double sr3 = sr2 * sr;
+    double sr6 = sr3 * sr3;
+    double sr12 = sr6 * sr6;
+
     double u = 4.0 * epsilon * (sr12 - sr6);
-
-    // Caluclate the potential energy at the cut-off distance
-    double sr_cut = sigma / 2.5;
-    double sr6_cut = std::pow(sr_cut, 6);
-    double sr12_cut = std::pow(sr_cut, 12);
-    double u_cut = 4.0 * epsilon * (sr12_cut - sr6_cut);
-
     return u - u_cut;
 }
 

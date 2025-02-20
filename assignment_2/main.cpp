@@ -31,28 +31,14 @@ int main(int argc, char *argv[])
 
     // Initialize MolecularSystem object
     MolecularSystem system;
-
-    // Loop over all positions and velocities, and create Molecule objects
     for (size_t i = 0; i < posData.size(); ++i)
     {
-        double x = posData[i][0];
-        double y = posData[i][1];
-        double z = posData[i][2];
-        double vx = 0.0, vy = 0.0, vz = 0.0;
+        const auto &pos = posData[i];
+        const auto &vel = velData[i];
 
-        // Add velocities if available
-        if (i < velData.size())
-        {
-            vx = velData[i][0];
-            vy = velData[i][1];
-            vz = velData[i][2];
-        }
-
-        // Create Molecule object
-        Molecule mol(static_cast<int>(i), x, y, z, vx, vy, vz);
-
-        // Add molecule object to MolecularSystem object
-        system.addMolecule(mol);
+        // Directly add a Molecule using an initializer list.
+        system.addMolecule(Molecule(static_cast<int>(i), pos[0], pos[1], pos[2],
+                                    vel[0], vel[1], vel[2]));
     }
 
     double kineticEnergy = system.totalKinetic();

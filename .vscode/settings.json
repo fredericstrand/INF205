@@ -41,6 +41,7 @@
     "variant": "cpp",
     "algorithm": "cpp",
     "vector": "cpp",
-    "fstream": "cpp"
+    "fstream": "cpp",
+    "array": "cpp"
   }
 }
