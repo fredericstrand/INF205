@@ -16,6 +16,8 @@ std::vector<std::array<double, 3>> readXYZ(const std::string &filename)
 
     int n;
     file >> n;
+    data.reserve(n);
+
     std::string dummy;
     std::getline(file, dummy);
 
@@ -24,7 +26,7 @@ std::vector<std::array<double, 3>> readXYZ(const std::string &filename)
         std::string label;
         double x, y, z;
         file >> label >> x >> y >> z;
-        data.push_back({x, y, z});
+        data.emplace_back(std::array<double, 3>{x, y, z});
     }
     return data;
 }
