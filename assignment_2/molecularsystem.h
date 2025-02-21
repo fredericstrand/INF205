@@ -14,6 +14,8 @@ public:
     // Getter for the internal molecules.
     const std::vector<Molecule> &getMolecules() const;
 
+    ~MolecularSystem();
+
 private:
     std::vector<Molecule> m_mols;
 };

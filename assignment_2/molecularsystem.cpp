@@ -15,6 +15,11 @@ double MolecularSystem::totalKinetic() const
     return sum;
 }
 
+MolecularSystem::~MolecularSystem()
+{
+    m_mols.clear(); // Not necessary, but good practice.
+}
+
 double MolecularSystem::totalPotential() const
 {
     double sum = 0.0;
