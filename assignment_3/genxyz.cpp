@@ -38,12 +38,19 @@ int genxyz(int box_size, float density, std::string filename)
     return 0;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    float density = 0.4;
-    int min_size = 5;
-    std::string filename = "test.xyz";
+    if (argc < 3)
+    {
+        std::cerr << "You need the box_size, density and the filename for output file " << argv[0] << "\n";
+        return 1;
+    }
 
-    int box_size = 20;
+    int box_size = std::stoi(argv[1]);
+    float density = std::stof(argv[2]);
+    std::string filename = argv[3];
+
+    int min_size = 5;
+
     return genxyz(box_size, density, filename);
 }
