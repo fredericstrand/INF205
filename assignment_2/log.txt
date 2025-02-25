@@ -1,0 +1,125 @@
+commit f989ee64fa0dd5de26b1ed124944d071cc2b83ac
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Fri Feb 21 11:01:57 2025 +0100
+
+    added destructor
+
+commit 9875c1b99e308156142bcf91ebb69328c54e3abc
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Fri Feb 21 09:30:03 2025 +0100
+
+    emplace_back
+
+commit b693ac919ae41b2637b2c545a181deff5e981398
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Thu Feb 20 16:10:00 2025 +0100
+
+    .. (
+
+commit f7feaae4ff8fbb06374de273b125e9593f7e92f6
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Wed Feb 19 18:47:50 2025 +0100
+
+    some optimization
+
+commit 56f5efd08cd76e47901bcad7aeba9f4e85f531b8
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Wed Feb 19 18:47:32 2025 +0100
+
+    some optimization
+
+commit 6185f6d0ec933c186f167a501a12b56dc093be77
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Tue Feb 18 14:31:56 2025 +0100
+
+    removed running files
+
+commit c8a1a4f31e7350566958df6fb9763dbdfb6b0da5
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Tue Feb 18 14:31:02 2025 +0100
+
+    fixed shifting for potential energy
+
+commit 8782de74632090e3ecd52c525b774355c47057bb
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Mon Feb 17 09:10:34 2025 +0100
+
+    Added MolecularSystem class
+
+commit 0d6885ba1e1be8488cc99a3ea35f43c75b7b7449
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Sun Feb 16 15:28:03 2025 +0100
+
+    assignment 2 working
+
+commit f89f5ed9abdb90325581c18a4d5ef581bc8fcb7a
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Sat Feb 15 21:11:05 2025 +0100
+
+    issues with reading file
+
+commit 88518fa3bb07039b4e736023a1453995b6ca711d
+Author: Frederic Strand <strandfrederic@outlook.com>
+Date:   Wed Feb 12 17:39:20 2025 +0100
+
+    ...
+
+commit aa029b837cc5cecb7b1fcb9702e8417627228852
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Wed Feb 12 17:15:47 2025 +0100
+
+    ...
+
+commit c203ab1f0973b4ec43ce63d6f92c471b43cbd10d
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Tue Feb 11 22:15:26 2025 +0100
+
+     I am clueless at this point :(
+
+commit 5380da48f797505d0a8048ea0a6609f099677ab2
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Mon Feb 10 18:33:44 2025 +0100
+
+    fix/removed unused dependency
+
+commit 626b1e5d103978c7ac25cdb32a4ba82aca2f74fd
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Mon Feb 10 18:32:08 2025 +0100
+
+    fix/double r for big radius
+
+commit af5b29eb87ddb994de202ef88d0f60f11fa85032
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Fri Feb 7 10:37:05 2025 +0100
+
+    deleted exicution files
+
+commit 4cb9b48a3402a55afcae23f47d02c490da19e8b5
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Thu Feb 6 19:13:07 2025 +0100
+
+    changed logical error for origo in gauss-circle
+
+commit f4790bf06f6a7abffce119f07b3c9dea8dacf845
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Wed Feb 5 14:30:19 2025 +0100
+
+    lecture 1
+
+commit 6c8b8e5a0613d413c0e00300065a037828a04d83
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Sun Feb 2 18:06:40 2025 +0100
+
+    circle working
+
+commit dd0d110ae86388e95bb9f45d89c833987000517e
+Author: Frederic Strand <strandfrederic@outlook.com>
+Date:   Sun Feb 2 01:21:56 2025 +0100
+
+    beginning gauss circle, but no compiler on stationay computer
+
+commit 84cf9640c9fa25ce27a0ec854160a081e52b1a76
+Author: fredericstrand <strandfrederic@outlook.com>
+Date:   Sat Feb 1 15:37:11 2025 +0100
+
+    prime completed
