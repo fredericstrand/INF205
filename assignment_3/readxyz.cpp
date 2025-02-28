@@ -27,8 +27,6 @@ std::vector<std::array<double, 3>> readXYZ(const std::string &filename)
     std::string dummy;
     std::getline(file, dummy);
 
-    std::cout << "Expected number of molecules: " << n << std::endl;
-
     for (int i = 0; i < n; i++)
     {
         std::string label;

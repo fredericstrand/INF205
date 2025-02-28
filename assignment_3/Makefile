@@ -16,7 +16,7 @@ $(TARGET2): $(OBJS2)
 main.o: main.cpp molecule.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
 
-genxyz.o: genxyz.cpp molecule.h
+genxyz.o: genxyz.cpp
 	$(CXX) $(CXXFLAGS) -c genxyz.cpp
 
 readxyz.o: readxyz.cpp
