@@ -29,14 +29,12 @@ int main(int argc, char *argv[])
 
     // Read positions
     auto positions = readXYZ(argv[2]);
-    std::cout << "Positions read: " << positions.size() << std::endl;
 
     // Read velocities if provided
     std::vector<std::array<double, 3>> velocities;
     if (argc == 4)
     {
         velocities = readXYZ(argv[3]);
-        std::cout << "Velocities read: " << velocities.size() << std::endl;
         if (positions.size() != velocities.size())
         {
             std::cerr << "Error: positions and velocities must have the same size.\n";
@@ -79,16 +77,16 @@ int main(int argc, char *argv[])
     std::chrono::duration<double, std::milli> elapsed_cells = end - start;
 
     // Output results and speedup
-    std::cout << "E_pot = " << E_pot_cells << ". (Using linked-cell data structure, taking "
+    std::cout << "E_pot = " << E_pot_cells << " Using linked-cell: "
               << elapsed_cells.count() << " ms.)\n";
-    std::cout << "E_pot = " << E_pot_orig << ". (Computed without using linked cells, taking "
+    std::cout << "E_pot = " << E_pot_orig << "Without using linked cells/lists: "
               << elapsed_orig.count() << " ms.)\n";
     std::cout << "#\n";
 
     if (elapsed_cells.count() > 0)
     {
         double speedup = elapsed_orig.count() / elapsed_cells.count();
-        std::cout << "Speedup factor from linked cells: " << speedup << std::endl;
+        std::cout << "Speedup factor: " << speedup << std::endl;
     }
 
     double E_total = E_kin + E_pot_orig;
