@@ -66,7 +66,6 @@ double Molecule::potential_energy(const Molecule &other, double boxSize, double 
         return 0.0;
     }
 
-    // Optimize by avoiding pow, as suggested in second implementation
     double inv_r2 = 1.0 / r2;
     double inv_r6 = inv_r2 * inv_r2 * inv_r2;
     double inv_r12 = inv_r6 * inv_r6;

@@ -1,45 +1,49 @@
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <iostream>
 #include <vector>
 #include <array>
+#include <string>
 
 std::vector<std::array<double, 3>> readXYZ(const std::string &filename)
 {
     std::ifstream file(filename);
     if (!file.is_open())
     {
-        throw std::runtime_error("Could not open file: " + filename);
+        std::cerr << "Could not open file: " << filename << std::endl;
+        return {};
     }
 
-    std::vector<std::array<double, 3>> coordinates;
-    std::string line, atomType;
-    std::size_t numAtoms;
+    std::vector<std::array<double, 3>> data;
+    std::size_t numAtoms = 0;
 
-    // Read number of atoms
+    // Read the first line to get the number of atoms
+    std::string line;
+    if (std::getline(file, line))
+    {
+        std::istringstream(line) >> numAtoms;
+    }
+
+    // Skip the second line
     std::getline(file, line);
-    std::istringstream(line) >> numAtoms;
 
-    // Skip comment line
-    std::getline(file, line);
-
-    // Read atom coordinates
+    // Read atom data
+    std::string atomType;
     double x, y, z;
-    while (std::getline(file, line) && coordinates.size() < numAtoms)
+    while (std::getline(file, line) && data.size() < numAtoms)
     {
         std::istringstream iss(line);
         if (iss >> atomType >> x >> y >> z)
         {
-            coordinates.push_back({x, y, z});
+            data.push_back({x, y, z});
         }
     }
 
-    if (coordinates.size() != numAtoms)
+    if (data.size() != numAtoms)
     {
-        std::cerr << "Warning: Expected " << numAtoms << " atoms, but read "
-                  << coordinates.size() << std::endl;
+        std::cerr << "Warning: Expected " << numAtoms
+                  << " atoms, but read " << data.size() << std::endl;
     }
 
-    return coordinates;
+    return data;
 }

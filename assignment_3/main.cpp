@@ -27,11 +27,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // 1) Read positions
+    // Read positions
     auto positions = readXYZ(argv[2]);
     std::cout << "Positions read: " << positions.size() << std::endl;
 
-    // 2) Read velocities (optional)
+    // Read velocities if provided
     std::vector<std::array<double, 3>> velocities;
     if (argc == 4)
     {
@@ -49,10 +49,10 @@ int main(int argc, char *argv[])
         velocities.resize(positions.size(), {0.0, 0.0, 0.0});
     }
 
-    // 3) Create molecular system
+    // Initilize molecular system
     MolecularSystem system(boxSize);
 
-    // 4) Add molecules to the system
+    // Add molecules to the system
     for (std::size_t i = 0; i < positions.size(); ++i)
     {
         system.addMolecule(Molecule(
@@ -62,23 +62,23 @@ int main(int argc, char *argv[])
     }
     std::cout << "Total molecules created: " << positions.size() << std::endl;
 
-    // 5) Compute kinetic energy
+    // Compute kinetic energy
     double E_kin = system.totalKineticEnergy();
     std::cout << "Computed kinetic energy: " << E_kin << std::endl;
 
-    // 6) Compute potential energy using original method and measure time
+    // Compute potential energy using original method and measure time
     auto start = std::chrono::high_resolution_clock::now();
     double E_pot_orig = system.totalPotentialEnergy();
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed_orig = end - start;
 
-    // 7) Compute potential energy using linked cells and measure time
+    // Compute potential energy using linked cells and measure time
     start = std::chrono::high_resolution_clock::now();
     double E_pot_cells = system.totalPotentialEnergyLinkedCells();
     end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed_cells = end - start;
 
-    // 8) Output results and speedup
+    // Output results and speedup
     std::cout << "E_pot = " << E_pot_cells << ". (Using linked-cell data structure, taking "
               << elapsed_cells.count() << " ms.)\n";
     std::cout << "E_pot = " << E_pot_orig << ". (Computed without using linked cells, taking "

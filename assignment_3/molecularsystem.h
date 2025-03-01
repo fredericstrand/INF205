@@ -20,6 +20,5 @@ private:
     double m_boxSize;
     std::vector<Molecule> m_molecules;
 
-    // Helper method to determine the optimal cell count
     int determineOptimalCellCount() const;
 };
