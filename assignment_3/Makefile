@@ -2,8 +2,8 @@ CXX = g++
 CXXFLAGS = -O2 -std=c++11 -Wall -Wextra
 TARGET1 = readxyz
 TARGET2 = genxyz
-OBJS1 = main.o readxyz.o molecule.o
-OBJS2 = genxyz.o molecule.o
+OBJS1 = main.o readxyz.o molecule.o molecularsystem.o
+OBJS2 = genxyz.o molecule.o molecularsystem.o
 
 all: $(TARGET1) $(TARGET2)
 

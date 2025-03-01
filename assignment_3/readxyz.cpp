@@ -1,46 +1,45 @@
-#include <iostream>
 #include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <iostream>
 #include <vector>
 #include <array>
-#include <string>
 
 std::vector<std::array<double, 3>> readXYZ(const std::string &filename)
 {
-    std::vector<std::array<double, 3>> data;
     std::ifstream file(filename);
-
     if (!file.is_open())
     {
-        std::cerr << "Could not open file: " << filename << std::endl;
-        return data;
+        throw std::runtime_error("Could not open file: " + filename);
     }
 
-    int n;
-    file >> n;
+    std::vector<std::array<double, 3>> coordinates;
+    std::string line, atomType;
+    std::size_t numAtoms;
 
-    if (file.fail())
+    // Read number of atoms
+    std::getline(file, line);
+    std::istringstream(line) >> numAtoms;
+
+    // Skip comment line
+    std::getline(file, line);
+
+    // Read atom coordinates
+    double x, y, z;
+    while (std::getline(file, line) && coordinates.size() < numAtoms)
     {
-        std::cerr << "Error: Could not read the number of molecules in " << filename << std::endl;
-        return data;
-    }
-
-    std::string dummy;
-    std::getline(file, dummy);
-
-    for (int i = 0; i < n; i++)
-    {
-        std::string label;
-        double x, y, z;
-
-        if (!(file >> label >> x >> y >> z))
+        std::istringstream iss(line);
+        if (iss >> atomType >> x >> y >> z)
         {
-            std::cerr << "Error: Could not read line " << i + 1 << " in " << filename << std::endl;
-            break;
+            coordinates.push_back({x, y, z});
         }
-
-        data.push_back({x, y, z});
     }
 
-    std::cout << "Successfully read " << data.size() << " molecules from " << filename << std::endl;
-    return data;
+    if (coordinates.size() != numAtoms)
+    {
+        std::cerr << "Warning: Expected " << numAtoms << " atoms, but read "
+                  << coordinates.size() << std::endl;
+    }
+
+    return coordinates;
 }
