@@ -1,12 +1,8 @@
 #include "molecule.h"
 #include <cmath>
-#include <iostream>
 
-Molecule::Molecule(int id, double x, double y, double z,
-                   double vx, double vy, double vz)
-    : m_id(id),
-      m_coords({x, y, z}),
-      m_vels({vx, vy, vz})
+Molecule::Molecule(int id, double x, double y, double z, double vx, double vy, double vz)
+    : m_id(id), m_coords({x, y, z}), m_vels({vx, vy, vz})
 {
 }
 
@@ -33,9 +29,7 @@ double Molecule::kinetic_energy(double mass) const
     return 0.5 * mass * (vx * vx + vy * vy + vz * vz);
 }
 
-double Molecule::potential_energy(const Molecule &other,
-                                  double boxSize,
-                                  double epsilon) const
+double Molecule::potential_energy(const Molecule &other, double boxSize, double epsilon) const
 {
     static const double cutoffDistance = 2.5;
     static const double cutoffDistance2 = cutoffDistance * cutoffDistance;
@@ -49,18 +43,10 @@ double Molecule::potential_energy(const Molecule &other,
     double dy = m_coords[1] - other.m_coords[1];
     double dz = m_coords[2] - other.m_coords[2];
 
-    if (dx > boxSize / 2.0)
-        dx -= boxSize;
-    else if (dx < -boxSize / 2.0)
-        dx += boxSize;
-    if (dy > boxSize / 2.0)
-        dy -= boxSize;
-    else if (dy < -boxSize / 2.0)
-        dy += boxSize;
-    if (dz > boxSize / 2.0)
-        dz -= boxSize;
-    else if (dz < -boxSize / 2.0)
-        dz += boxSize;
+    // Apply periodic boundary conditions
+    dx -= boxSize * std::round(dx / boxSize);
+    dy -= boxSize * std::round(dy / boxSize);
+    dz -= boxSize * std::round(dz / boxSize);
 
     double r2 = dx * dx + dy * dy + dz * dz;
 
@@ -71,6 +57,8 @@ double Molecule::potential_energy(const Molecule &other,
 
     double inv_r2 = 1.0 / r2;
     double inv_r6 = inv_r2 * inv_r2 * inv_r2;
-    double u = 4.0 * epsilon * (inv_r6 * inv_r6 - inv_r6);
+    double inv_r12 = inv_r6 * inv_r6;
+
+    double u = 4.0 * epsilon * (inv_r12 - inv_r6);
     return u - u_cut;
 }

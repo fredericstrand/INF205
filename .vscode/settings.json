@@ -43,6 +43,10 @@
     "vector": "cpp",
     "fstream": "cpp",
     "array": "cpp",
-    "__split_buffer": "cpp"
+    "__split_buffer": "cpp",
+    "unordered_map": "cpp",
+    "regex": "cpp",
+    "map": "cpp",
+    "chrono": "cpp"
   }
 }

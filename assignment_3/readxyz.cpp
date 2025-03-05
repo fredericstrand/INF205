@@ -1,48 +1,49 @@
-#include <iostream>
 #include <fstream>
+#include <sstream>
+#include <iostream>
 #include <vector>
 #include <array>
 #include <string>
 
 std::vector<std::array<double, 3>> readXYZ(const std::string &filename)
 {
-    std::vector<std::array<double, 3>> data;
     std::ifstream file(filename);
-
     if (!file.is_open())
     {
         std::cerr << "Could not open file: " << filename << std::endl;
-        return data;
+        return {};
     }
 
-    int n;
-    file >> n;
+    std::vector<std::array<double, 3>> data;
+    std::size_t numAtoms = 0;
 
-    if (file.fail())
+    // Read the first line to get the number of atoms
+    std::string line;
+    if (std::getline(file, line))
     {
-        std::cerr << "Error: Could not read the number of molecules in " << filename << std::endl;
-        return data;
+        std::istringstream(line) >> numAtoms;
     }
 
-    std::string dummy;
-    std::getline(file, dummy);
+    // Skip the second line
+    std::getline(file, line);
 
-    std::cout << "Expected number of molecules: " << n << std::endl;
-
-    for (int i = 0; i < n; i++)
+    // Read atom data
+    std::string atomType;
+    double x, y, z;
+    while (std::getline(file, line) && data.size() < numAtoms)
     {
-        std::string label;
-        double x, y, z;
-
-        if (!(file >> label >> x >> y >> z))
+        std::istringstream iss(line);
+        if (iss >> atomType >> x >> y >> z)
         {
-            std::cerr << "Error: Could not read line " << i + 1 << " in " << filename << std::endl;
-            break;
+            data.push_back({x, y, z});
         }
-
-        data.push_back({x, y, z});
     }
 
-    std::cout << "Successfully read " << data.size() << " molecules from " << filename << std::endl;
+    if (data.size() != numAtoms)
+    {
+        std::cerr << "Warning: Expected " << numAtoms
+                  << " atoms, but read " << data.size() << std::endl;
+    }
+
     return data;
 }
