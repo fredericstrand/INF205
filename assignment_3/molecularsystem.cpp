@@ -1,6 +1,7 @@
 #include "molecularsystem.h"
 #include <cmath>
 #include <algorithm>
+#include "molecule.h"
 
 MolecularSystem::MolecularSystem(double boxSize) : m_boxSize(boxSize)
 {

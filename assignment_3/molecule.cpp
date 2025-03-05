@@ -44,20 +44,9 @@ double Molecule::potential_energy(const Molecule &other, double boxSize, double 
     double dz = m_coords[2] - other.m_coords[2];
 
     // Apply periodic boundary conditions
-    if (dx > boxSize / 2.0)
-        dx -= boxSize;
-    else if (dx < -boxSize / 2.0)
-        dx += boxSize;
-
-    if (dy > boxSize / 2.0)
-        dy -= boxSize;
-    else if (dy < -boxSize / 2.0)
-        dy += boxSize;
-
-    if (dz > boxSize / 2.0)
-        dz -= boxSize;
-    else if (dz < -boxSize / 2.0)
-        dz += boxSize;
+    dx -= boxSize * std::round(dx / boxSize);
+    dy -= boxSize * std::round(dy / boxSize);
+    dz -= boxSize * std::round(dz / boxSize);
 
     double r2 = dx * dx + dy * dy + dz * dz;
 

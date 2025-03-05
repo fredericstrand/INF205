@@ -66,13 +66,13 @@ int main(int argc, char *argv[])
     double E_kin = system.totalKineticEnergy();
     std::cout << "Computed kinetic energy: " << E_kin << std::endl;
 
-    // Compute potential energy using original method and measure time
+    // Compute potential energy using original method
     auto start = std::chrono::high_resolution_clock::now();
     double E_pot_orig = system.totalPotentialEnergy();
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed_orig = end - start;
 
-    // Compute potential energy using linked cells and measure time
+    // Compute potential energy using linked cells
     start = std::chrono::high_resolution_clock::now();
     double E_pot_cells = system.totalPotentialEnergyLinkedCells();
     end = std::chrono::high_resolution_clock::now();
