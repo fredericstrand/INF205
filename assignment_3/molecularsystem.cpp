@@ -1,133 +1,124 @@
+#include "molecule.h"
 #include "molecularsystem.h"
+#include <iostream>
 #include <cmath>
-#include <algorithm>
+#include <vector>
+using namespace std;
 
-MolecularSystem::MolecularSystem(double boxSize)
-    : m_boxSize(boxSize)
+MolecularSystem::MolecularSystem(double a) : box_size(a) {}
+
+void MolecularSystem::add_molecule(const Molecule &mol)
 {
+    molecules.push_back(mol);
 }
 
-void MolecularSystem::addMolecule(const Molecule &molecule)
+const std::vector<Molecule> &MolecularSystem::get_molecules() const
 {
-    m_molecules.push_back(molecule);
+    return molecules;
 }
 
-double MolecularSystem::totalKineticEnergy() const
+double MolecularSystem::total_kinetic_energy() const
 {
-    double E_kin = 0.0;
-    for (const auto &m : m_molecules)
+    double kinetic_energy = 0.0;
+    for (const auto &mol : molecules)
     {
-        E_kin += m.kinetic_energy();
+        kinetic_energy += mol.kinetic_energy();
     }
-    return E_kin;
+    return kinetic_energy;
 }
 
-double MolecularSystem::totalPotentialEnergy() const
+double MolecularSystem::total_potential_energy() const
 {
-    double E_pot = 0.0;
-#pragma omp parallel for reduction(+ : E_pot)
-    for (size_t i = 0; i < m_molecules.size(); i++)
+    double potential_energy = 0.0;
+    const size_t n = molecules.size();
+#pragma omp parallel for reduction(+ : potential_energy)
+    for (size_t i = 0; i < n; i++)
     {
-        for (size_t j = i + 1; j < m_molecules.size(); j++)
+        for (size_t j = i + 1; j < n; j++)
         {
-            E_pot += m_molecules[i].potential_energy(m_molecules[j], m_boxSize);
+            potential_energy += molecules[i].potential_energy(molecules[j], box_size);
         }
     }
-    return E_pot;
+
+    return potential_energy;
 }
 
-int MolecularSystem::determineOptimalCellCount() const
+double MolecularSystem::total_potential_energy_LinkedCells() const
 {
-    if (m_molecules.size() < 100 || m_boxSize < 7.5)
-        return 0;
+    // Using a fixed cell_size of 2.5.
+    const double cell_size = 2.5;
+    double potential_energy = 0.0;
+    int num_cells = static_cast<int>(ceil(box_size / cell_size));
+    int num_cells_squared = num_cells * num_cells;
+    int num_cells_cubed = num_cells * num_cells * num_cells;
 
-    int cellCount = static_cast<int>(m_boxSize / 2.5);
-    cellCount = std::max(cellCount, 2);
-    cellCount = std::min(cellCount, 20);
-    return cellCount;
-}
-
-double MolecularSystem::totalPotentialEnergyLinkedCells() const
-{
-    int numCells = determineOptimalCellCount();
-    if (numCells <= 0)
-        return totalPotentialEnergy();
-
-    double cellSize = m_boxSize / numCells;
-    std::vector<std::vector<size_t>> cells(numCells * numCells * numCells);
-
-    auto index3D = [&](double x, double y, double z)
+    // Build linked cells using the simplified logic (without fmod)
+    vector<vector<size_t>> cells(num_cells_cubed);
+    for (size_t i = 0; i < molecules.size(); i++)
     {
-        int ix = static_cast<int>(x / cellSize) % numCells;
-        int iy = static_cast<int>(y / cellSize) % numCells;
-        int iz = static_cast<int>(z / cellSize) % numCells;
-        if (ix < 0)
-            ix += numCells;
-        if (iy < 0)
-            iy += numCells;
-        if (iz < 0)
-            iz += numCells;
-        return ix + iy * numCells + iz * numCells * numCells;
-    };
-
-    for (size_t i = 0; i < m_molecules.size(); i++)
-    {
-        auto &c = m_molecules[i].getCoordinates();
-        cells[index3D(c[0], c[1], c[2])].push_back(i);
+        const auto &pos = molecules[i].get_coordinates();
+        int cx = static_cast<int>(pos[0] / cell_size) % num_cells;
+        int cy = static_cast<int>(pos[1] / cell_size) % num_cells;
+        int cz = static_cast<int>(pos[2] / cell_size) % num_cells;
+        int idx = cx + cy * num_cells + cz * num_cells_squared;
+        cells[idx].push_back(i);
     }
 
-    std::vector<std::array<int, 3>> offsets;
-    for (int dx = 0; dx <= 1; dx++)
-        for (int dy = 0; dy <= 1; dy++)
-            for (int dz = 0; dz <= 1; dz++)
-                offsets.push_back({dx, dy, dz});
+    // Define neighbor offsets (13 neighbors to avoid double counting).
+    const int neighbor_count = 13;
+    const int neighbor_offsets[neighbor_count][3] = {
+        {0, 0, 1},
+        {0, 1, -1},
+        {0, 1, 0},
+        {0, 1, 1},
+        {1, -1, -1},
+        {1, -1, 0},
+        {1, -1, 1},
+        {1, 0, -1},
+        {1, 0, 0},
+        {1, 0, 1},
+        {1, 1, -1},
+        {1, 1, 0},
+        {1, 1, 1}};
 
-    double E_pot = 0.0;
-
-    for (int xC = 0; xC < numCells; xC++)
+    // Loop over all cells.
+    for (int cx = 0; cx < num_cells; cx++)
     {
-        for (int yC = 0; yC < numCells; yC++)
+        for (int cy = 0; cy < num_cells; cy++)
         {
-            for (int zC = 0; zC < numCells; zC++)
+            for (int cz = 0; cz < num_cells; cz++)
             {
-                int idx = xC + yC * numCells + zC * numCells * numCells;
-                const auto &cCell = cells[idx];
+                int cell_idx = cx + cy * num_cells + cz * num_cells_squared;
+                const vector<size_t> &currentCell = cells[cell_idx];
 
-                for (size_t i = 0; i < cCell.size(); i++)
+                // Interactions within the same cell.
+                for (size_t i = 0; i < currentCell.size(); i++)
                 {
-                    for (size_t j = i + 1; j < cCell.size(); j++)
-                        E_pot += m_molecules[cCell[i]].potential_energy(m_molecules[cCell[j]], m_boxSize);
-                }
-
-                for (auto &off : offsets)
-                {
-                    int dx = off[0], dy = off[1], dz = off[2];
-                    if (dx == 0 && dy == 0 && dz == 0)
-                        continue;
-
-                    int nx = (xC + dx + numCells) % numCells;
-                    int ny = (yC + dy + numCells) % numCells;
-                    int nz = (zC + dz + numCells) % numCells;
-                    int nIdx = nx + ny * numCells + nz * numCells * numCells;
-                    const auto &nCell = cells[nIdx];
-
-                    for (auto iID : cCell)
-                        for (auto jID : nCell)
-                            E_pot += m_molecules[iID].potential_energy(m_molecules[jID], m_boxSize);
+                    for (size_t j = i + 1; j < currentCell.size(); j++)
+                    {
+                        potential_energy += molecules[currentCell[i]].potential_energy(molecules[currentCell[j]], box_size);
+                    }
+                    // Interactions with neighbor cells.
+                    for (int n = 0; n < neighbor_count; n++)
+                    {
+                        int nx = (cx + neighbor_offsets[n][0] + num_cells) % num_cells;
+                        int ny = (cy + neighbor_offsets[n][1] + num_cells) % num_cells;
+                        int nz = (cz + neighbor_offsets[n][2] + num_cells) % num_cells;
+                        int neighbor_idx = nx + ny * num_cells + nz * num_cells_squared;
+                        const vector<size_t> &neighborCell = cells[neighbor_idx];
+                        for (size_t j = 0; j < neighborCell.size(); j++)
+                        {
+                            potential_energy += molecules[currentCell[i]].potential_energy(molecules[neighborCell[j]], box_size);
+                        }
+                    }
                 }
             }
         }
     }
-
-    return E_pot;
+    return potential_energy;
 }
 
-double MolecularSystem::totalEnergy() const
+double MolecularSystem::total_energy() const
 {
-    return totalKineticEnergy() + totalPotentialEnergy();
-}
-
-const std::vector<Molecule> &MolecularSystem::getMolecules() const
-{
-    return m_molecules;
+    return total_kinetic_energy() + total_potential_energy();
 }

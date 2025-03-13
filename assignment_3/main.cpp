@@ -6,10 +6,13 @@
 #include <cstdlib>
 #include <chrono>
 #include <fstream>
+
 #include "molecule.h"
 #include "molecularsystem.h"
 
-std::vector<std::array<double, 3>> readXYZ(const std::string &filename);
+// Declarations for file reading
+std::vector<std::array<double, 3>> readXYZPositions(double a, const std::string &filename);
+std::vector<std::array<double, 3>> readXYZVelocities(const std::string &filename);
 
 int main(int argc, char *argv[])
 {
@@ -20,22 +23,22 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    double boxSize = std::atof(argv[1]);
-    if (boxSize < 5.0)
+    double box_size = std::atof(argv[1]);
+    if (box_size < 5.0)
     {
         std::cerr << "Error: box_size must be at least 5.\n";
         return 1;
     }
 
     // Read positions
-    auto positions = readXYZ(argv[2]);
+    auto positions = readXYZPositions(box_size, argv[2]);
     std::cout << "Positions read: " << positions.size() << std::endl;
 
     // Read velocities if provided
     std::vector<std::array<double, 3>> velocities;
     if (argc == 4)
     {
-        velocities = readXYZ(argv[3]);
+        velocities = readXYZVelocities(argv[3]);
         std::cout << "Velocities read: " << velocities.size() << std::endl;
         if (positions.size() != velocities.size())
         {
@@ -49,41 +52,36 @@ int main(int argc, char *argv[])
         velocities.resize(positions.size(), {0.0, 0.0, 0.0});
     }
 
-    // Initilize molecular system
-    MolecularSystem system(boxSize);
+    // Create molecular system
+    MolecularSystem system(box_size);
 
     // Add molecules to the system
     for (std::size_t i = 0; i < positions.size(); ++i)
     {
-        system.addMolecule(Molecule(
+        system.add_molecule(Molecule(
             static_cast<int>(i),
             positions[i][0], positions[i][1], positions[i][2],
             velocities[i][0], velocities[i][1], velocities[i][2]));
     }
-    std::cout << "Total molecules created: " << positions.size() << std::endl;
 
     // Compute kinetic energy
-    double E_kin = system.totalKineticEnergy();
-    std::cout << "Computed kinetic energy: " << E_kin << std::endl;
+    double E_kin = system.total_kinetic_energy();
 
     // Compute potential energy using original method
     auto start = std::chrono::high_resolution_clock::now();
-    double E_pot_orig = system.totalPotentialEnergy();
+    double E_pot_orig = system.total_potential_energy();
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed_orig = end - start;
 
     // Compute potential energy using linked cells
     start = std::chrono::high_resolution_clock::now();
-    double E_pot_cells = system.totalPotentialEnergyLinkedCells();
+    double E_pot_cells = system.total_potential_energy_LinkedCells();
     end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed_cells = end - start;
 
     // Output results and speedup
-    std::cout << "E_pot = " << E_pot_cells << ". (Using linked-cell data structure, taking "
-              << elapsed_cells.count() << " ms.)\n";
-    std::cout << "E_pot = " << E_pot_orig << ". (Computed without using linked cells, taking "
-              << elapsed_orig.count() << " ms.)\n";
-    std::cout << "#\n";
+    std::cout << "E_pot = " << E_pot_cells << ". (Linked cells, " << elapsed_cells.count() << " ms.)\n";
+    std::cout << "E_pot = " << E_pot_orig << ". (Original, " << elapsed_orig.count() << " ms.)\n";
 
     if (elapsed_cells.count() > 0)
     {

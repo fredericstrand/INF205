@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -O2 -std=c++17 -Wall -Wextra
+CXXFLAGS = -O2 -std=c++17 -DNDEBUG -ffast-math
 TARGET1 = readxyz
 TARGET2 = genxyz
 TARGET3 = heuristic
@@ -10,13 +10,13 @@ OBJS3 = heuristic.o readxyz.o molecule.o molecularsystem.o
 all: $(TARGET1) $(TARGET2) $(TARGET3)
 
 $(TARGET1): $(OBJS1)
-	$(CXX) $(CXXFLAGS) -o $(TARGET1) $(OBJS1)
+	$(CXX) $(OBJS1) -o $(TARGET1)
 
 $(TARGET2): $(OBJS2)
-	$(CXX) $(CXXFLAGS) -o $(TARGET2) $(OBJS2)
+	$(CXX) $(OBJS2) -o $(TARGET2)
 
 $(TARGET3): $(OBJS3)
-	$(CXX) $(CXXFLAGS) -o $(TARGET3) $(OBJS3)
+	$(CXX) $(OBJS3) -o $(TARGET3)
 
 main.o: main.cpp molecule.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
