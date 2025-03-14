@@ -1,4 +1,4 @@
-CXX = clang++
+CXX = g++
 CXXFLAGS = -O2 -std=c++17 -DNDEBUG -Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include
 LDFLAGS = -L/opt/homebrew/opt/libomp/lib -lomp
 TARGET1 = readxyz
