@@ -7,7 +7,6 @@
 #include "molecule.h"
 #include "molecularsystem.h"
 
-namespace fs = std::filesystem;
 std::vector<std::array<double, 3>> readXYZPositions(double a, const std::string &filename);
 
 struct ThresholdResult
@@ -23,8 +22,8 @@ struct ThresholdResult
 
 void find_thresholds(const std::string &directory)
 {
-    fs::path dir(directory);
-    if (!fs::exists(dir) || !fs::is_directory(dir))
+    std::filesystem::path dir(directory);
+    if (!std::filesystem::exists(dir) || !std::filesystem::is_directory(dir))
     {
         std::cerr << "Error: " << directory << " not found or not a directory.\n";
         return;
@@ -32,9 +31,9 @@ void find_thresholds(const std::string &directory)
     std::vector<ThresholdResult> results;
     std::regex pattern("^box([0-9\\.]+)-density([0-9\\.]+)-positions\\.xyz$");
 
-    for (const auto &entry : fs::directory_iterator(dir))
+    for (const auto &entry : std::filesystem::directory_iterator(dir))
     {
-        if (!fs::is_regular_file(entry.path()))
+        if (!std::filesystem::is_regular_file(entry.path()))
             continue;
 
         std::string fname = entry.path().filename().string();
@@ -79,7 +78,7 @@ void find_thresholds(const std::string &directory)
 int main()
 {
     const std::string dir_name = "positions_files";
-    if (!fs::exists(dir_name) && !fs::create_directory(dir_name))
+    if (!std::filesystem::exists(dir_name) && !std::filesystem::create_directory(dir_name))
     {
         std::cerr << "Error creating directory\n";
         return 1;
@@ -90,8 +89,10 @@ int main()
     for (double a : a_vals)
         for (double rho : rho_vals)
         {
-            std::string filename = dir_name + "/box" + std::to_string(static_cast<int>(a)) + "-density" + std::to_string(rho) + "-positions.xyz";
-            std::string command = "./genxyz " + std::to_string(a) + " " + std::to_string(rho) + " " + filename;
+            std::string filename = dir_name + "/box" + std::to_string(static_cast<int>(a)) +
+                                   "-density" + std::to_string(rho) + "-positions.xyz";
+            std::string command = "./genxyz " + std::to_string(a) + " " +
+                                  std::to_string(rho) + " " + filename;
             std::cout << "Executing: " << command << "\n";
 
             if (std::system(command.c_str()) != 0)

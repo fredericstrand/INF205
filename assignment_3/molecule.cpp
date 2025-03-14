@@ -36,11 +36,11 @@ double Molecule::potential_energy(const Molecule &other,
                                   double sigma) const
 {
     // Lennard-Jones cutoff and shift
-    double cutoffDistance = 2.5 * sigma;
-    double cutoffDistance2 = cutoffDistance * cutoffDistance;
-    double cutoffDistance6 = cutoffDistance2 * cutoffDistance2 * cutoffDistance2;
-    double cutoffDistance12 = cutoffDistance6 * cutoffDistance6;
-    double u_cut = 4.0 * epsilon * ((1.0 / cutoffDistance12) - (1.0 / cutoffDistance6));
+    const double cutoffDistance = 2.5 * sigma;
+    const double cutoffDistance2 = cutoffDistance * cutoffDistance;
+    const double cutoffDistance6 = cutoffDistance2 * cutoffDistance2 * cutoffDistance2;
+    const double cutoffDistance12 = cutoffDistance6 * cutoffDistance6;
+    const double u_cut = 4.0 * epsilon * ((1.0 / cutoffDistance12) - (1.0 / cutoffDistance6));
 
     // Minimum-image convention
     double dx = m_coords[0] - other.m_coords[0];
@@ -55,7 +55,7 @@ double Molecule::potential_energy(const Molecule &other,
     double r2 = dx * dx + dy * dy + dz * dz;
 
     // Ignore beyond cutoff or identical positions
-    if (r2 >= cutoffDistance2 || r2 == 0.0)
+    if (r2 >= cutoffDistance2 || r2 < 1e-12)
     {
         return 0.0;
     }

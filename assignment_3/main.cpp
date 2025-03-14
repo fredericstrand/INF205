@@ -67,16 +67,14 @@ int main(int argc, char *argv[])
     // Compute kinetic energy
     double E_kin = system.total_kinetic_energy();
 
-    // Compute potential energy using original method
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::steady_clock::now();
     double E_pot_orig = system.total_potential_energy();
-    auto end = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double, std::milli> elapsed_orig = end - start;
 
-    // Compute potential energy using linked cells
-    start = std::chrono::high_resolution_clock::now();
+    start = std::chrono::steady_clock::now();
     double E_pot_cells = system.total_potential_energy_LinkedCells();
-    end = std::chrono::high_resolution_clock::now();
+    end = std::chrono::steady_clock::now();
     std::chrono::duration<double, std::milli> elapsed_cells = end - start;
 
     // Output results and speedup

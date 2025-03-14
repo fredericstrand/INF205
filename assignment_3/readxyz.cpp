@@ -30,15 +30,10 @@ std::vector<std::array<double, 3>> readXYZPositions(double a, const std::string 
         std::istringstream iss(line);
         if (iss >> atom >> x >> y >> z)
         {
-            x = fmod(x, a);
-            if (x < 0)
-                x += a;
-            y = fmod(y, a);
-            if (y < 0)
-                y += a;
-            z = fmod(z, a);
-            if (z < 0)
-                z += a;
+            x = fmod(x + a, a);
+            y = fmod(y + a, a);
+            z = fmod(z + a, a);
+
             data.push_back({x, y, z});
         }
     }
