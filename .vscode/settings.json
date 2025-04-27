@@ -52,5 +52,6 @@
     "iomanip": "cpp",
     "optional": "cpp",
     "filesystem": "cpp"
+    "chrono": "cpp"
   }
 }

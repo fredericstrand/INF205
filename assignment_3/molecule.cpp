@@ -3,6 +3,7 @@
 
 Molecule::Molecule(int id, double x, double y, double z,
                    double vx, double vy, double vz)
+Molecule::Molecule(int id, double x, double y, double z, double vx, double vy, double vz)
     : m_id(id), m_coords({x, y, z}), m_vels({vx, vy, vz})
 {
 }
@@ -34,6 +35,7 @@ double Molecule::potential_energy(const Molecule &other,
                                   double boxSize,
                                   double epsilon,
                                   double sigma) const
+double Molecule::potential_energy(const Molecule &other, double boxSize, double epsilon) const
 {
     // Lennard-Jones cutoff and shift
     const double cutoffDistance = 2.5 * sigma;
@@ -48,6 +50,7 @@ double Molecule::potential_energy(const Molecule &other,
     double dz = m_coords[2] - other.m_coords[2];
 
     // Apply periodic boundary conditions (minimum image)
+    // Apply periodic boundary conditions
     dx -= boxSize * std::round(dx / boxSize);
     dy -= boxSize * std::round(dy / boxSize);
     dz -= boxSize * std::round(dz / boxSize);
@@ -67,5 +70,7 @@ double Molecule::potential_energy(const Molecule &other,
     double u = 4.0 * epsilon * (inv_r12 - inv_r6);
 
     // Subtract shift
+
+    double u = 4.0 * epsilon * (inv_r12 - inv_r6);
     return u - u_cut;
 }

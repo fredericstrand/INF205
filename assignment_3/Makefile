@@ -1,6 +1,7 @@
 CXX = g++
 CXXFLAGS = -O2 -std=c++17 -DNDEBUG -Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include
 LDFLAGS = -L/opt/homebrew/opt/libomp/lib -lomp
+CXXFLAGS = -O2 -std=c++17 -Wall -Wextra
 TARGET1 = readxyz
 TARGET2 = genxyz
 TARGET3 = heuristic
@@ -18,6 +19,9 @@ $(TARGET2): $(OBJS2)
 
 $(TARGET3): $(OBJS3)
 	$(CXX) $(OBJS3) $(LDFLAGS) -o $(TARGET3)
+
+$(TARGET3): $(OBJS3)
+	$(CXX) $(CXXFLAGS) -o $(TARGET3) $(OBJS3)
 
 main.o: main.cpp molecule.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
@@ -38,4 +42,5 @@ molecularsystem.o: molecularsystem.cpp molecularsystem.h
 	$(CXX) $(CXXFLAGS) -c molecularsystem.cpp
 
 clean:
+	rm -f *.o $(TARGET1) $(TARGET2) $(TARGET3)
 	rm -f *.o $(TARGET1) $(TARGET2) $(TARGET3)

@@ -8,6 +8,7 @@ class Molecule
 public:
     Molecule(int id, double x, double y, double z,
              double vx = 0.0, double vy = 0.0, double vz = 0.0);
+    Molecule(int id, double x, double y, double z, double vx, double vy, double vz);
 
     int get_ID() const;
     const std::array<double, 3> &get_coordinates() const;
@@ -20,6 +21,7 @@ public:
                             double boxSize,
                             double epsilon = 1.0,
                             double sigma = 1.0) const;
+    double potential_energy(const Molecule &other, double boxSize, double epsilon = 1.0) const;
 
 private:
     int m_id;
@@ -28,3 +30,4 @@ private:
 };
 
 #endif
+};
