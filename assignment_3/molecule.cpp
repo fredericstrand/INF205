@@ -1,22 +1,24 @@
 #include "molecule.h"
 #include <cmath>
 
+Molecule::Molecule(int id, double x, double y, double z,
+                   double vx, double vy, double vz)
 Molecule::Molecule(int id, double x, double y, double z, double vx, double vy, double vz)
     : m_id(id), m_coords({x, y, z}), m_vels({vx, vy, vz})
 {
 }
 
-int Molecule::getID() const
+int Molecule::get_ID() const
 {
     return m_id;
 }
 
-const std::array<double, 3> &Molecule::getCoordinates() const
+const std::array<double, 3> &Molecule::get_coordinates() const
 {
     return m_coords;
 }
 
-const std::array<double, 3> &Molecule::getVelocities() const
+const std::array<double, 3> &Molecule::get_velocities() const
 {
     return m_vels;
 }
@@ -29,20 +31,25 @@ double Molecule::kinetic_energy(double mass) const
     return 0.5 * mass * (vx * vx + vy * vy + vz * vz);
 }
 
+double Molecule::potential_energy(const Molecule &other,
+                                  double boxSize,
+                                  double epsilon,
+                                  double sigma) const
 double Molecule::potential_energy(const Molecule &other, double boxSize, double epsilon) const
 {
-    static const double cutoffDistance = 2.5;
-    static const double cutoffDistance2 = cutoffDistance * cutoffDistance;
+    // Lennard-Jones cutoff and shift
+    const double cutoffDistance = 2.5 * sigma;
+    const double cutoffDistance2 = cutoffDistance * cutoffDistance;
+    const double cutoffDistance6 = cutoffDistance2 * cutoffDistance2 * cutoffDistance2;
+    const double cutoffDistance12 = cutoffDistance6 * cutoffDistance6;
+    const double u_cut = 4.0 * epsilon * ((1.0 / cutoffDistance12) - (1.0 / cutoffDistance6));
 
-    // Shift potential to zero at r = 2.5:
-    static const double u_cut = 4.0 * ((1.0 / std::pow(cutoffDistance, 12)) -
-                                       (1.0 / std::pow(cutoffDistance, 6)));
-
-    // Compute distance with the minimum-image convention
+    // Minimum-image convention
     double dx = m_coords[0] - other.m_coords[0];
     double dy = m_coords[1] - other.m_coords[1];
     double dz = m_coords[2] - other.m_coords[2];
 
+    // Apply periodic boundary conditions (minimum image)
     // Apply periodic boundary conditions
     dx -= boxSize * std::round(dx / boxSize);
     dy -= boxSize * std::round(dy / boxSize);
@@ -50,14 +57,19 @@ double Molecule::potential_energy(const Molecule &other, double boxSize, double 
 
     double r2 = dx * dx + dy * dy + dz * dz;
 
-    if (r2 >= cutoffDistance2 || r2 == 0.0)
+    // Ignore beyond cutoff or identical positions
+    if (r2 >= cutoffDistance2 || r2 < 1e-12)
     {
         return 0.0;
     }
 
+    // Standard LJ formula
     double inv_r2 = 1.0 / r2;
     double inv_r6 = inv_r2 * inv_r2 * inv_r2;
     double inv_r12 = inv_r6 * inv_r6;
+    double u = 4.0 * epsilon * (inv_r12 - inv_r6);
+
+    // Subtract shift
 
     double u = 4.0 * epsilon * (inv_r12 - inv_r6);
     return u - u_cut;

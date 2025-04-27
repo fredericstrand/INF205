@@ -47,6 +47,11 @@
     "unordered_map": "cpp",
     "regex": "cpp",
     "map": "cpp",
+    "chrono": "cpp",
+    "charconv": "cpp",
+    "iomanip": "cpp",
+    "optional": "cpp",
+    "filesystem": "cpp"
     "chrono": "cpp"
   }
 }
